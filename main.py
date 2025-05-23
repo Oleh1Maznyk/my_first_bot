@@ -31,8 +31,8 @@ async def get_films(message: Message):
     films = data.get_films()
     keyboard = films_keyboard_markup(films)
     await message.answer(
-        text="Список наявних фільмів",
-        reply_merkup=keyboard
+        "Список наявних фільмів",
+        reply_markup=keyboard
         )
 
 
