@@ -10,15 +10,15 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
-import data
-from keyboards import films_keyboard_markup
-from commands import FILM_COMMAND
+from roytes import films_router
+from commands import COMMANDS
 
 
 load_dotenv()
 
 TBOT = os.getenv("TBOT")
 dp = Dispatcher()
+dp.include_routers(films_router)
 
 
 @dp.message(CommandStart())
@@ -26,18 +26,9 @@ async def command_start(message: Message):
     await message.answer(text=f"Привіт {message.from_user.full_name}!")
 
 
-@dp.message(FILM_COMMAND)
-async def get_films(message: Message):
-    films = data.get_films()
-    keyboard = films_keyboard_markup(films)
-    await message.answer(
-        "Список наявних фільмів",
-        reply_markup=keyboard
-        )
-
-
 async def main():
     bot = Bot(token=TBOT, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    await bot.set_my_commands(COMMANDS)
     await dp.start_polling(bot)
 
 
