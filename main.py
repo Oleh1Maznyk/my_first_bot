@@ -10,7 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
-from roytes import films_router
+from routes import films_router
 from commands import COMMANDS
 
 
