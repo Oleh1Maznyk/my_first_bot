@@ -47,7 +47,7 @@ async def get_film(callback: CallbackQuery, callback_data: FilmCallback):
 async def add_film(message: Message, state: FSMContext):
     await state.set_state(FilmForm.name)
     await message.answer(
-        text="",
+        text="Введіть назву фільму",
         reply_markup=ReplyKeyboardRemove()
     )
 
@@ -57,7 +57,7 @@ async def get_film_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await state.set_state(FilmForm.description)
     await message.answer(
-        text="",
+        text="Введіть опис для фільму",
         reply_markup=ReplyKeyboardRemove()
     )
 
@@ -74,7 +74,7 @@ async def get_film_name(message: Message, state: FSMContext):
 
 @films_router.message(FilmForm.rating)
 async def get_film_name(message: Message, state: FSMContext):
-    await state.update_data(rating=message.text)
+    await state.update_data(rating=float(message.text))
     await state.set_state(FilmForm.genre)
     await message.answer(
         text="Введіть жанр фільму",
@@ -98,5 +98,16 @@ async def get_film_name(message: Message, state: FSMContext):
     await state.set_state(FilmForm.poster)
     await message.answer(
         text="Вставте покликання на постер фільму",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+
+@films_router.message(FilmForm.poster)
+async def get_film_poster(message:Message, state: FSMContext):
+    film_data = await state.update_data(poster=message.text)
+    data.add_film(film_data)
+    await state.clear()
+    await message.answer(
+        text=f"Фільм '{film_data["name"]}' успішно додано!",
         reply_markup=ReplyKeyboardRemove()
     )

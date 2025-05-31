@@ -10,7 +10,7 @@ DELETE_FILM = Command("delete_film")
 
 COMMANDS = [
     BotCommand(command="start", description="Запуск програми"),
-    BotCommand(command="films", description="Показати всі Фільми"),
+    BotCommand(command="films", description="Показати всі фільми"),
     BotCommand(command="add_film", description="Додати новий фільм"),
     BotCommand(command="search_by_actor", description="Знайти фільм за імям автора"),
     BotCommand(command="delete_film", description="Видалити фільм")
