@@ -1,10 +1,10 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, URLInputFile, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 
 from commands import FILM_COMMAND, ADD_FILM_COMMAND
 import data
-from keyboards import films_keyboard_markup, FilmCallback
+from keyboards import films_keyboard_markup, FilmCallback, del_film_keyboard
 from models import FilmModel
 from forms import FilmForm
 
@@ -39,7 +39,7 @@ async def get_film(callback: CallbackQuery, callback_data: FilmCallback):
             url=film.poster,
             filename=film.name
         ),
-        reply_markup=ReplyKeyboardRemove()
+        reply_markup=del_film_keyboard(callback_data.id)
     )
 
 
@@ -110,4 +110,15 @@ async def get_film_poster(message:Message, state: FSMContext):
     await message.answer(
         text=f"Фільм '{film_data["name"]}' успішно додано!",
         reply_markup=ReplyKeyboardRemove()
+    )
+
+
+@films_router.callback_query(F.data.startswith("del_film_"))
+async def del_film(callback: CallbackQuery, state: FSMContext):
+    film_id = int(callback.data.split("_")[-1])
+    film = data.get_films(film_id=film_id)
+    data.delete_film(film_id)
+    await callback.message.answer(
+        # text="Фільм успішно видалено"
+        text=f"Фільм '{film.get("name")}' успішно видалено"
     )
