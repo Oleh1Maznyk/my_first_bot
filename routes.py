@@ -21,6 +21,11 @@ async def get_films(message: Message):
         reply_markup=keyboard
         )
 
+    # await message.answer(
+    #     text="Поки немає фільмів"
+    # )
+
+
 
 @films_router.callback_query(FilmCallback.filter())
 async def get_film(callback: CallbackQuery, callback_data: FilmCallback):
@@ -73,13 +78,20 @@ async def get_film_name(message: Message, state: FSMContext):
 
 
 @films_router.message(FilmForm.rating)
-async def get_film_name(message: Message, state: FSMContext):
-    await state.update_data(rating=float(message.text))
-    await state.set_state(FilmForm.genre)
-    await message.answer(
-        text="Введіть жанр фільму",
-        reply_markup=ReplyKeyboardRemove()
-    )
+async def get_film_rating(message: Message, state: FSMContext):
+    try:
+        rating = float(message.text.replace(",", "."))
+        if 0 <= rating <= 10:
+            await state.update_data(rating=rating)
+            await state.set_state(FilmForm.genre)
+            await message.answer(
+                text="Введіть жанр фільму",
+                reply_markup=ReplyKeyboardRemove()
+            )
+        else:
+            await message.answer("Будь ласка, введіть число від 0 до 10.")
+    except ValueError:
+        await message.answer("Це не схоже на число. Введіть рейтинг від 0 до 10.")
 
 
 @films_router.message(FilmForm.genre)
