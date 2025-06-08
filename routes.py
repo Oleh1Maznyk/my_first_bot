@@ -35,9 +35,9 @@ async def get_film(callback: CallbackQuery, callback_data: FilmCallback):
     film_data = data.get_films(film_id=callback_data.id)
     film = FilmModel(**film_data)
     text = f"""
-    Фільм: {film.name}
+    Назва фільму: {film.name}
     Опис: {film.description}
-    Рейтин: {film.rating}
+    Рейтинг: {film.rating}
     Жанр: {film.genre}
     Актори: {", ".join(film.actors)}
     """
