@@ -21,14 +21,17 @@ async def get_films(message: Message):
         reply_markup=keyboard
         )
 
-    # await message.answer(
-    #     text="Поки немає фільмів"
-    # )
-
-
 
 @films_router.callback_query(FilmCallback.filter())
 async def get_film(callback: CallbackQuery, callback_data: FilmCallback):
+    """
+    Description of get_film
+
+    Args:
+        callback (CallbackQuery):
+        callback_data (FilmCallback):
+
+    """
     film_data = data.get_films(film_id=callback_data.id)
     film = FilmModel(**film_data)
     text = f"""
